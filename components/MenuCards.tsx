@@ -1,8 +1,9 @@
 "use client";
 import { X } from "lucide-react";
 
-import React from "react";
+import React, { useEffect } from "react";
 import { useState } from "react";
+import CardsLayer from "./CardsLayer";
 
 export default function MainMenuCards(props: any) {
   return (
@@ -89,10 +90,31 @@ const CommunityModal: React.FC<any> = ({ communities }) => {
     setIsModalOpen(true);
   };
   const closeModal = () => setIsModalOpen(false);
+  const [sheetData, setSheetData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
+  useEffect(() => {
+    async function fetchData() {
+      setLoading(true);
+      try {
+        const res = await fetch(`/api/sheets?category=all`);
+
+        if (!res.ok) throw new Error(`API returned ${res.status}`);
+        const data = await res.json();
+        setSheetData(data.sheetData);
+      } catch (err) {
+        console.error("Failed to fetch data:", err);
+        setError(`No communities found with jobs. Please check back later.`);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    fetchData();
+  }, []);
 
   return (
     <>
-      {/* Your existing link - modified to open modal */}
       <button
         onClick={openModal}
         className="block bg-[#F7931A] rounded-lg overflow-hidden border border-gray-200 hover:shadow-md transition-shadow"
@@ -128,6 +150,9 @@ const CommunityModal: React.FC<any> = ({ communities }) => {
               >
                 <X className="w-5 h-5" />
               </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-2">
+              <CardsLayer data={sheetData} />
             </div>
           </div>
         </div>
