@@ -14,8 +14,7 @@ export default function Footer() {
           <Link href="/terms-conditions">T&C</Link>
           <span className="text-green-800">|</span>
           <Link href="/faq">FAQ</Link>
-          {/* <span className="text-green-800">|</span>
-          <Link href="/sitemap">Sitemap</Link> */}
+         
         </div>
 
         {/* Contact Info */}
